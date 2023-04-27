@@ -11,7 +11,7 @@ struct  Tarea
 }typedef Tarea;
 
 
-// void cargarTareas(Tarea **nodo, int cantTareas, char* buff);
+void cargarTareas(Tarea **nodo, int cantTareas, char* buff);
 // void cargarTareas(Tarea **nodo, int cantTareas);
 
 int main()
@@ -75,18 +75,16 @@ int main()
             tareasRealizadas[i]= (Tarea*) malloc (sizeof(Tarea));
             tareasRealizadas[i]=tareasPendientes[i];
             tareasPendientes[i]=NULL;
-            cont++;
         }
-        // else{
-        //     tareasPendientes[cont+2]=tareasPendientes[i];
-        //     tareasRealizadas[i]=NULL;
-        //     cont2++;
-        // }  
-        
+        else
+        {
+            tareasRealizadas[i]=NULL;
+        }
+
     }
 
     printf("\n======Tareas Realizadas=====\n");
-    for (int i = 0; i < cont; i++)
+    for (int i = 0; i < cantTareas; i++)
     {
         if (tareasRealizadas[i])
         {
@@ -107,8 +105,20 @@ int main()
         }        
     }
 
+//liberar memoria
+    for (int i = 0; i < cantTareas; i++)
+    {
+        free(tareasPendientes[i]->Descripcion);
+        free(tareasRealizadas[i]);
+        free(tareasPendientes[i]);
+    }
+    
+    free(tareasRealizadas);
+    free(tareasPendientes);
+
     return 0;
 }
+
 
 // tareaRealiz(Tarea *nodo,int i)
 // {
@@ -132,3 +142,4 @@ int main()
 //     }
 //     free(buff);
 // }
+
