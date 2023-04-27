@@ -10,9 +10,11 @@ struct  Tarea
     int Duracion;//entre 10-100
 }typedef Tarea;
 
-
-void cargarTareas(Tarea **nodo, int cantTareas, char* buff);
-// void cargarTareas(Tarea **nodo, int cantTareas);
+void cargarTareas(Tarea **nodo, int cantTareas);
+void mostrarTareas(Tarea **nodo, int cantTareas);
+void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas);
+void mostrarTareasRealizadas(Tarea** tareasRealizadas, int cantTareas);
+void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas);
 
 int main()
 {
@@ -35,33 +37,70 @@ int main()
         tareasPendientes[i]=NULL;
     }
 
-    //cargar las tareas
-    char* buff=(char*)malloc(sizeof(char)*500);
+    cargarTareas(tareasPendientes, cantTareas);
 
+//MOSTRAR TAREAS
+    mostrarTareas(tareasPendientes, cantTareas);
+
+//CONTROL DE TAREAS
+    controlDeTareas( tareasPendientes, tareasRealizadas, cantTareas);
+    
+//Mostrar resultado de control de tareas
+    mostrarTareasRealizadas( tareasRealizadas, cantTareas);
+    mostrarTareasPendientes( tareasPendientes, cantTareas);
+//liberar memoria
+    for (int i = 0; i < cantTareas; i++)
+    {
+        free(tareasPendientes[i]->Descripcion);
+        free(tareasRealizadas[i]);
+        free(tareasPendientes[i]);
+    }
+    
+    free(tareasRealizadas);
+    free(tareasPendientes);
+
+    return 0;
+}
+
+
+
+//CARGAR TAREAS
+void cargarTareas(Tarea**nodo, int cantTareas){
+    char* buff=(char*)malloc(sizeof(char)*500);
     for (int i = 0; i < cantTareas; i++)
     {
         
-        tareasPendientes[i]=(Tarea*) malloc(sizeof(Tarea) * cantTareas);
-        tareasPendientes[i]->TareaID=i+1;
+        nodo[i]=(Tarea*) malloc(sizeof(Tarea) * cantTareas);
+        nodo[i]->TareaID=i+1;
         puts("Descripcion de la tarea a realizar: \t");
         gets(buff);
-        tareasPendientes[i]->Descripcion=(char*)malloc(sizeof(char)*(strlen(buff)+1));
-        strcpy(tareasPendientes[i]->Descripcion,buff);
-        tareasPendientes[i]->Duracion=10+rand()%91;
+        nodo[i]->Descripcion=(char*)malloc(sizeof(char)*(strlen(buff)+1));
+        strcpy(nodo[i]->Descripcion,buff);
+        nodo[i]->Duracion=10+rand()%91;
     }
     free(buff);
+}
 
-    //MOSTRAR TAREAS
-    int completa,cont=0,cont2=0;
-
+//MOSTRAR TAREAS
+void mostrarTareas(Tarea** tareasPendientes, int cantTareas)
+{
     printf("\n======Tareas=====\n");
     for (int i = 0; i < cantTareas; i++)
     {
         printf("\n---Tarea %d\n",tareasPendientes[i]->TareaID);
         printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
         printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
+    }
+}
 
-        printf("La tarea ya fue completada?\n 1-SI\t 2-NO\n\r");
+//CONTROL DE TAREAS
+void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas)
+{
+    int completa;
+    printf("\n=====Control de tareas=====\n");
+    for (int i = 0; i < cantTareas; i++)
+    {
+        printf("La tarea %d ya fue completada?\n 1-SI\t 2-NO\n\r",tareasPendientes[i]->TareaID);
         scanf("%d",&completa);
         while (completa!=2 && completa!=1)
         {
@@ -80,9 +119,11 @@ int main()
         {
             tareasRealizadas[i]=NULL;
         }
-
     }
+}
 
+void mostrarTareasRealizadas(Tarea** tareasRealizadas, int cantTareas)
+{
     printf("\n======Tareas Realizadas=====\n");
     for (int i = 0; i < cantTareas; i++)
     {
@@ -93,7 +134,9 @@ int main()
             printf("Duracion: %d\n",tareasRealizadas[i]->Duracion);
         }
     }
-
+}
+void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas)
+{
     printf("\n======Tareas Pendientes=====\n");
     for (int i = 0; i < cantTareas; i++)
     {
@@ -104,42 +147,4 @@ int main()
             printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
         }        
     }
-
-//liberar memoria
-    for (int i = 0; i < cantTareas; i++)
-    {
-        free(tareasPendientes[i]->Descripcion);
-        free(tareasRealizadas[i]);
-        free(tareasPendientes[i]);
-    }
-    
-    free(tareasRealizadas);
-    free(tareasPendientes);
-
-    return 0;
 }
-
-
-// tareaRealiz(Tarea *nodo,int i)
-// {
-//     int i;
-//     char* buff=(char*)malloc(sizeof(char)*500);
-
-
-// }
-// void cargarTareas(Tarea**nodo, int cantTareas,char* buff){
-//     char* buff=(char*)malloc(sizeof(char)*500);
-//     for (int i = 0; i < cantTareas; i++)
-//     {
-        
-//         nodo[i]=(Tarea*) malloc(sizeof(Tarea) * cantTareas);
-//         nodo[i]->TareaID=i+1;
-//         puts("Descripcion de la tarea a realizar: \t");
-//         gets(buff);
-//         nodo[i]->Descripcion=(char*)malloc(sizeof(char)*(strlen(buff)+1));
-//         strcpy(nodo[i]->Descripcion,buff);
-//         nodo[i]->Duracion=10+rand()%91;
-//     }
-//     free(buff);
-// }
-
