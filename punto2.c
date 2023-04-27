@@ -11,7 +11,8 @@ struct  Tarea
 }typedef Tarea;
 
 
-Tarea cargarTareas();
+// void cargarTareas(Tarea **nodo, int cantTareas, char* buff);
+// void cargarTareas(Tarea **nodo, int cantTareas);
 
 int main()
 {
@@ -48,19 +49,86 @@ int main()
         strcpy(tareasPendientes[i]->Descripcion,buff);
         tareasPendientes[i]->Duracion=10+rand()%91;
     }
+    free(buff);
 
-    //MOSTRAR
+    //MOSTRAR TAREAS
+    int completa,cont=0,cont2=0;
 
-    printf("======Tareas=====\n\n");
+    printf("\n======Tareas=====\n");
     for (int i = 0; i < cantTareas; i++)
     {
-        printf("---Tarea %d\n",tareasPendientes[i]->TareaID);
+        printf("\n---Tarea %d\n",tareasPendientes[i]->TareaID);
         printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
         printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
 
-    }
-    
+        printf("La tarea ya fue completada?\n 1-SI\t 2-NO\n\r");
+        scanf("%d",&completa);
+        while (completa!=2 && completa!=1)
+        {
+            puts("Valor incorrecto, intente nuevamente");
+            printf("\nLa tarea ya fue completada?\n 1-SI\t 2-NO\n\r");
+            scanf("%d",&completa);
+        }
         
+        if (completa==1)
+        {
+            tareasRealizadas[i]= (Tarea*) malloc (sizeof(Tarea));
+            tareasRealizadas[i]=tareasPendientes[i];
+            tareasPendientes[i]=NULL;
+            cont++;
+        }
+        // else{
+        //     tareasPendientes[cont+2]=tareasPendientes[i];
+        //     tareasRealizadas[i]=NULL;
+        //     cont2++;
+        // }  
+        
+    }
+
+    printf("\n======Tareas Realizadas=====\n");
+    for (int i = 0; i < cont; i++)
+    {
+        if (tareasRealizadas[i])
+        {
+            printf("\n---Tarea %d\n",tareasRealizadas[i]->TareaID);
+            printf("Descripcion %s\n",tareasRealizadas[i]->Descripcion);
+            printf("Duracion: %d\n",tareasRealizadas[i]->Duracion);
+        }
+    }
+
+    printf("\n======Tareas Pendientes=====\n");
+    for (int i = 0; i < cantTareas; i++)
+    {
+        if (tareasPendientes[i])
+        {
+            printf("\n---Tarea %d\n",tareasPendientes[i]->TareaID);
+            printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
+            printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
+        }        
+    }
 
     return 0;
 }
+
+// tareaRealiz(Tarea *nodo,int i)
+// {
+//     int i;
+//     char* buff=(char*)malloc(sizeof(char)*500);
+
+
+// }
+// void cargarTareas(Tarea**nodo, int cantTareas,char* buff){
+//     char* buff=(char*)malloc(sizeof(char)*500);
+//     for (int i = 0; i < cantTareas; i++)
+//     {
+        
+//         nodo[i]=(Tarea*) malloc(sizeof(Tarea) * cantTareas);
+//         nodo[i]->TareaID=i+1;
+//         puts("Descripcion de la tarea a realizar: \t");
+//         gets(buff);
+//         nodo[i]->Descripcion=(char*)malloc(sizeof(char)*(strlen(buff)+1));
+//         strcpy(nodo[i]->Descripcion,buff);
+//         nodo[i]->Duracion=10+rand()%91;
+//     }
+//     free(buff);
+// }
