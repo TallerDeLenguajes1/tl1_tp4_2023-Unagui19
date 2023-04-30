@@ -10,6 +10,13 @@ struct  Tarea
     int Duracion;//entre 10-100
 }typedef Tarea;
 
+
+struct Nodo
+{
+    Tarea T;
+    Nodo *Siguiente;
+};
+
 void cargarTareas(Tarea **nodo, int cantTareas);
 void mostrarTareas(Tarea **nodo, int cantTareas);
 void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas);
