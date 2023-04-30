@@ -15,6 +15,7 @@ void mostrarTareas(Tarea **nodo, int cantTareas);
 void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas);
 void mostrarTareasRealizadas(Tarea** tareasRealizadas, int cantTareas);
 void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas);
+void BuscarTarea(Tarea** tareasPendientes, Tarea** tareasRealizadas, int cantTareas);
 
 int main()
 {
@@ -48,6 +49,10 @@ int main()
 //Mostrar resultado de control de tareas
     mostrarTareasRealizadas( tareasRealizadas, cantTareas);
     mostrarTareasPendientes( tareasPendientes, cantTareas);
+
+//funcion buscar
+
+    BuscarTarea( tareasPendientes, tareasRealizadas, cantTareas);
 //liberar memoria
     for (int i = 0; i < cantTareas; i++)
     {
@@ -146,5 +151,44 @@ void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas)
             printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
             printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
         }        
+    }
+}
+
+//Funcion buscar tarea
+
+void BuscarTarea(Tarea** tareasPendientes, Tarea** tareasRealizadas, int cantTareas)
+{
+    int bandera=0;
+    char *palabra=(char*) malloc(sizeof(char)*50);
+
+    printf("\t=======Busqueda de tareas=======\n");
+    printf("Palabra clave buscada: ");
+    scanf("%s",palabra);
+    printf("\n");
+    for (int i = 0; i < cantTareas; i++)
+    {
+        if (tareasPendientes[i] && strstr(tareasPendientes[i]->Descripcion,palabra))
+        {
+            printf("---Tarea %d: \n",tareasPendientes[i]->TareaID);
+            printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
+            printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
+            printf("Estado: Pendiente\n");
+            bandera=1;
+
+        }
+        else if (tareasRealizadas[i] && strstr(tareasRealizadas[i]->Descripcion,palabra))
+        {
+            printf("---Tarea %d: \n",tareasRealizadas[i]->TareaID);
+            printf("Descripcion %s\n",tareasRealizadas[i]->Descripcion);
+            printf("Duracion: %d\n",tareasRealizadas[i]->Duracion);
+            printf("Estado: Realizada\n");
+            bandera=1;
+        }
+
+
+    }
+    if (bandera==0)
+    {
+        printf("No existe ninguna tarea asociada a esa palabra\n");
     }
 }
