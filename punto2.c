@@ -15,6 +15,7 @@ void mostrarTareas(Tarea **nodo, int cantTareas);
 void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas);
 void mostrarTareasRealizadas(Tarea** tareasRealizadas, int cantTareas);
 void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas);
+void BuscarTarea(Tarea** tareasPendientes, Tarea** tareasRealizadas, int cantTareas);
 
 int main()
 {
@@ -48,6 +49,9 @@ int main()
 //Mostrar resultado de control de tareas
     mostrarTareasRealizadas( tareasRealizadas, cantTareas);
     mostrarTareasPendientes( tareasPendientes, cantTareas);
+
+//BUSCAR ID
+BuscarTarea( tareasPendientes, tareasRealizadas, cantTareas);
 //liberar memoria
     for (int i = 0; i < cantTareas; i++)
     {
@@ -147,4 +151,38 @@ void mostrarTareasPendientes(Tarea** tareasPendientes, int cantTareas)
             printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
         }        
     }
+}
+
+void BuscarTarea(Tarea** tareasPendientes, Tarea** tareasRealizadas, int cantTareas)
+{
+    int id, bandera=0;
+    printf("\t=======Busqueda de tareas=======\n");
+    printf("Numero de ID buscado: ");
+    scanf("%d",&id);
+    for (int i = 0; i < cantTareas; i++)
+    {
+        if (tareasPendientes[i] && tareasPendientes[i]->TareaID==id)
+        {
+            printf("---Tarea %d: \n",id);
+            printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
+            printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
+            printf("Estado: Pendiente");
+            bandera=1;
+
+        }
+        else if (tareasRealizadas[i] && tareasRealizadas[i]->TareaID==id)
+        {
+            printf("---Tarea %d: \n",id);
+            printf("Descripcion %s\n",tareasRealizadas[i]->Descripcion);
+            printf("Duracion: %d\n",tareasRealizadas[i]->Duracion);
+            printf("Estado: Realizada");
+            bandera=1;
+        }
+        
+    }
+    if (bandera==0)
+    {
+        printf("No existe ninguna tarea asociada a ese id");
+    }
+    
 }
