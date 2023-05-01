@@ -1,3 +1,6 @@
-        printf("\n---Tarea %d\n",Aux->T.TareaID);
-        printf("Descripcion %s\n",Aux->T.Descripcion);
-        printf("Duracion: %d\n",Aux->T.Duracion);
+    // }
+    // if (bandera==0)
+    // {
+    //     printf("No existe ninguna tarea asociada a ese id");
+    // }
+    
