@@ -106,40 +106,22 @@ void insertarTareas(Nodo**start, int id)
     *start=nuevoNodo;
 }
 
-//MOSTRAR TAREAS ORDENADAS ASCENDENTEMENTE SEGUN SU NUMERO DE ID
+//MOSTRAR TAREAS 
 void *mostrarTareas(Nodo* start)
 {
-    int i=0;
-    Tarea **direcciones=(Tarea**) malloc (sizeof(Tarea*));
     Nodo* Aux=start;
     printf("\n======Tareas=====\n");
     while (Aux)
     {    
-        direcciones[i]=(Tarea*) malloc(sizeof(Tarea));
-        direcciones[i]->TareaID=Aux->T.TareaID;
-        direcciones[i]->Duracion= Aux->T.Duracion;
-        direcciones[i]->Descripcion=(char*) malloc(sizeof(Aux->T.Descripcion));
-        strcpy(direcciones[i]->Descripcion,Aux->T.Descripcion);
+        printf("\n---Tarea %d\n",Aux->T.TareaID);
+        printf("Descripcion %s\n",Aux->T.Descripcion);
+        printf("Duracion: %d\n",Aux->T.Duracion);
         Aux=Aux->Siguiente;
-        i++;
     }
-    for (int j = i-1; j >= 0 ; j--)
-    {
-        printf("\n---Tarea %d\n",direcciones[j]->TareaID);
-        printf("Descripcion %s\n",direcciones[j]->Descripcion);
-        printf("Duracion: %d\n",direcciones[j]->Duracion);
-    }
-
-    for (int j = 0; j < i; j++)
-    {
-        free(direcciones[j]->Descripcion);
-    }
-    
-    free(direcciones);
 }
 
 //CONTROL DE TAREAS
-void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas)
+void controlDeTareas(Nodo* NodosPendientes,Nodo* tareasRealizadas) 
 {
     int completa;
     printf("\n=====Control de tareas=====\n");
