@@ -106,6 +106,8 @@ void insertarTareas(Nodo**start, int id)
     *start=nuevoNodo;
 }
 
+
+
 //MOSTRAR TAREAS ORDENADAS ASCENDENTEMENTE SEGUN SU NUMERO DE ID
 void *mostrarTareas(Nodo* start)
 {
@@ -138,6 +140,8 @@ void *mostrarTareas(Nodo* start)
     free(direcciones);
 }
 
+
+// A PARTIR DE AQUI HAY QUE PASARLO TODAVIA A LISTA ENLAZADA
 //CONTROL DE TAREAS
 void controlDeTareas(Tarea** tareasPendientes,Tarea** tareasRealizadas, int cantTareas)
 {
