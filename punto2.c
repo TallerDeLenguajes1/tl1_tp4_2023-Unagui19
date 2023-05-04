@@ -22,19 +22,22 @@ Nodo* crearTareas(int id);
 void insertarTareas(Nodo **start,int id);
 void mostrarTareas(Nodo *start);
 void cargarLista(Nodo);
-void controlDeTareas(Nodo **tareasPendientes,Nodo **tareasRealizadas);
+void controlDeTareas(Nodo **tareasPendientes,Nodo **tareasRealizadas, Nodo** tareasEnProceso);
 void mostrarTareasRealizadas(Nodo* tareasRealizadas);
 void mostrarTareasPendientes(Nodo* tareasPendientes);
-void BuscarTareaPorID(Nodo* tareasPendientes, Nodo* tareasRealizadas);
-void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas);
-
+void mostrarTareasEnProceso(Nodo* tareasEnProceso);
+void BuscarTareaPorID(Nodo* tareasPendientes, Nodo* tareasRealizadas,Nodo* tareasEnProceso);
+void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas,Nodo* tareasEnProceso);
+void eliminar(Nodo **start);
+void MostrarDatos(Nodo *lista);
 int main()
 {
     srand(time(NULL));
     int seguir,id=0;
-    Nodo  *tareasPendientes,*tareasRealizadas; //serian  las cabeceras
+    Nodo  *tareasPendientes,*tareasRealizadas, *tareasEnProceso; //serian  las cabeceras
     tareasPendientes=crearListaVacia();
     tareasRealizadas=crearListaVacia();
+    tareasEnProceso=crearListaVacia();
 
     printf("\t=====WENASSS=====\n\r");
 
@@ -67,11 +70,12 @@ int main()
 
     //MOSTRAR TAREAS
     mostrarTareas(tareasPendientes);
-
+    // MostrarDatos(tareasPendientes);
     //Controles de tareas realizadas y pendientes
-    controlDeTareas(&tareasPendientes,&tareasRealizadas);
+    controlDeTareas(&tareasPendientes,&tareasRealizadas,&tareasEnProceso);
     mostrarTareasRealizadas(tareasRealizadas);
     mostrarTareasPendientes(tareasPendientes);
+    mostrarTareasEnProceso(tareasEnProceso);
     
     printf("\n======BUSQUEDA=====\n");
     int opcion;
@@ -93,11 +97,11 @@ int main()
 
     if (opcion==1)
     {
-        BuscarTareaPorID(tareasPendientes, tareasRealizadas);
+        BuscarTareaPorID(tareasPendientes, tareasRealizadas, tareasEnProceso);
     }
     else
     {
-        BuscarTareaPorPalabra(tareasPendientes, tareasRealizadas);
+        BuscarTareaPorPalabra(tareasPendientes, tareasRealizadas, tareasEnProceso);
     }
 
     free(tareasRealizadas);
@@ -151,7 +155,7 @@ void mostrarTareas(Nodo* start)
 }
 
 //CONTROL DE TAREAS
-void controlDeTareas(Nodo** tareasPendientes,Nodo** tareasRealizadas) 
+void controlDeTareas(Nodo** tareasPendientes,Nodo** tareasRealizadas, Nodo** tareasEnProceso) 
 {
     int completa;
     Nodo* aux=*tareasPendientes;
@@ -161,13 +165,13 @@ void controlDeTareas(Nodo** tareasPendientes,Nodo** tareasRealizadas)
 
     while (aux)
     {
-        printf("La tarea %d ya fue completada?\n 1-SI\t 2-NO\n\r",aux->T.TareaID);
+        printf("Situación de la tarea %d:\n 1-Realizada\t 2-En Proceso\t 3-Pendiente\n\r",aux->T.TareaID);
         scanf("%d",&completa);
         fflush(stdin);
-        while (completa!=2 && completa!=1)
+        while (completa!=2 && completa!=1 && completa!=3)
         {
             puts("Valor incorrecto, intente nuevamente");
-            printf("La tarea %d ya fue completada?\n 1-SI\t 2-NO\n\r",aux->T.TareaID);
+            printf("Situación de la tarea %d:\n 1-Realizada\t 2-En Proceso\t 3-Pendiente\n\r",aux->T.TareaID);
             scanf("%d",&completa);
         }
         
@@ -192,6 +196,29 @@ void controlDeTareas(Nodo** tareasPendientes,Nodo** tareasRealizadas)
                 aux=aux->Siguiente;
                 auxAnt->Siguiente=aux->Siguiente;
                 
+            }
+        
+        }
+        else if (completa==2)
+        {
+            if (aux==*tareasPendientes)
+            {
+                //saco de las pendientes y redirijo el puntero 
+                *tareasPendientes=aux->Siguiente;
+                auxAnt=aux->Siguiente;
+                //pongo el nodo quitado en realizadas
+                // auxAnt->Siguiente=aux->Siguiente;
+                aux->Siguiente=*tareasEnProceso;
+                *tareasEnProceso=aux;
+                aux=auxAnt;
+            }   
+            else
+            {
+                auxAnt=aux;
+                aux->Siguiente=*tareasEnProceso;
+                *tareasEnProceso=aux;
+                aux=aux->Siguiente;
+                auxAnt->Siguiente=aux->Siguiente;    
             }
         }
         else
@@ -228,11 +255,25 @@ void mostrarTareasPendientes(Nodo* tareasPendientes)
     }
 }
 
-void BuscarTareaPorID(Nodo* tareasPendientes, Nodo* tareasRealizadas)
+void mostrarTareasEnProceso(Nodo *tareasEnProceso)
+{
+    Nodo *aux=tareasEnProceso;
+    printf("\n======Tareas en Proceso=====\n");
+    while(aux)
+    {
+        printf("\n---Tarea %d\n",aux->T.TareaID);
+        printf("Descripcion %s\n",aux->T.Descripcion);
+        printf("Duracion: %d\n",aux->T.Duracion);
+        aux=aux->Siguiente;
+    }
+}
+
+void BuscarTareaPorID(Nodo* tareasPendientes, Nodo* tareasRealizadas, Nodo* tareasEnProceso)
 {
     int id;
     Nodo *auxP=tareasPendientes;
     Nodo *auxR=tareasRealizadas;
+    Nodo *auxE=tareasEnProceso;
     printf("Numero de ID buscado: ");
     scanf("%d",&id);
     while(auxP && auxP->T.TareaID!=id)
@@ -262,16 +303,31 @@ void BuscarTareaPorID(Nodo* tareasPendientes, Nodo* tareasRealizadas)
         }
         else
         {
-            printf("\nNo existe ninguna tarea asociada a ese id");  
+            while(auxE && auxE->T.TareaID!=id)
+            {
+                auxE=auxE->Siguiente;
+            }
+            if (auxE)
+            {
+                printf("\n---Tarea %d: \n", auxE->T.TareaID);
+                printf("Descripcion %s\n",auxE->T.Descripcion);
+                printf("Duracion: %d\n",auxE->T.Duracion);
+                printf("Estado: En Proceso\n");
+            }
+            else
+            {
+                printf("\nNo existe ninguna tarea asociada a ese id");  
+            }           
         }
     }
 }
 
-void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas)
+void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas, Nodo* tareasEnProceso)
 {
     int bandera=0;
     Nodo *auxP=tareasPendientes;
     Nodo *auxR=tareasRealizadas;
+    Nodo *auxE=tareasEnProceso;
     char *palabra=(char*) malloc(sizeof(char)*50);
 
     printf("\n\t=======Busqueda por palabra clave=======\n");
@@ -315,6 +371,19 @@ void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas)
         bandera=0;
     }
 
+    if (auxE)
+    {
+        printf("\n---Tarea %d: \n", auxE->T.TareaID);
+        printf("Descripcion %s\n",auxE->T.Descripcion);
+        printf("Duracion: %d\n",auxE->T.Duracion);
+        printf("Estado: En Proceso\n");
+        bandera=1;
+    }
+    else
+    {
+        bandera=0;
+    }
+
     if (bandera==0)
     {
             printf("\nNo existe ninguna tarea asociada a esa palabra");
@@ -322,29 +391,31 @@ void BuscarTareaPorPalabra(Nodo* tareasPendientes, Nodo* tareasRealizadas)
     
 }
 
-    // for (int i = 0; i < cantTareas; i++)
-    // {
-    //     if (tareasPendientes[i] && strstr(tareasPendientes[i]->Descripcion,palabra))
-    //     {
-    //         printf("---Tarea %d: \n",tareasPendientes[i]->TareaID);
-    //         printf("Descripcion %s\n",tareasPendientes[i]->Descripcion);
-    //         printf("Duracion: %d\n",tareasPendientes[i]->Duracion);
-    //         printf("Estado: Pendiente\n");
-    //         bandera=1;
+void eliminar(Nodo **Nodos)
+{
+    Nodo *aux;
+    if (*Nodos)
+    {
+        aux=*Nodos;
+        *Nodos=aux->Siguiente;
+    }
+    
 
-    //     }
-    //     else if (tareasRealizadas[i] && strstr(tareasRealizadas[i]->Descripcion,palabra))
-    //     {
-    //         printf("---Tarea %d: \n",tareasRealizadas[i]->TareaID);
-    //         printf("Descripcion %s\n",tareasRealizadas[i]->Descripcion);
-    //         printf("Duracion: %d\n",tareasRealizadas[i]->Duracion);
-    //         printf("Estado: Realizada\n");
-    //         bandera=1;
-    //     }
+    free(aux);
+}
 
+void MostrarDatos(Nodo *lista)
+{
+    Nodo *aux=lista;
+    int contador=0, sumaDuracion=0;
+    while (aux)
+    {
+        contador++;
+        sumaDuracion+=aux->T.Duracion;
+        aux=aux->Siguiente;
+    }
 
-    // }
-    // if (bandera==0)
-    // {
-    //     printf("No existe ninguna tarea asociada a esa palabra\n");
-    // }
+    printf("Cantidad de tareas: %d",contador);
+    printf("Duracion total: %d", sumaDuracion);
+    
+}
